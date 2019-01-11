@@ -10,7 +10,7 @@ This module reads model schema which is created from orm model and generate swag
 
 `npm install swagger-model-generator-ts`
 
-## Usage
+## Generate from sequlize
 
 Generate swagger model definitions with orm model
 
@@ -24,7 +24,7 @@ import * as swaggerGenerator from 'swagger-model-generator-ts';
 
 swaggerGenerator.generate([Sample], {
   path: 'path/to/models.js',
-  dbType: 'sequelize'
+  type: 'sequelize'
 });
 ```
 
@@ -43,7 +43,41 @@ export const swaggerSpec = swaggerJSDoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 ```
 
+## Generate from Joi
+
+Generate swagger model definitions with Joi Schema
+
+```js
+import * as swaggerGenerator from 'swagger-model-generator-ts';
+
+/**
+ * In this example Sample is Joi Schema
+ */
+
+swaggerGenerator.generate([Sample], {
+  path: 'path/to/schemas.js',
+  type: 'joi'
+});
+```
+
+Create swagger ui and execute swagger server with generated swagger documentation in given `path`
+
+```js
+import swaggerJSDoc from 'swagger-jsdoc';
+const options = {
+  swaggerDefinition: {},
+  apis: ['path/to/schemas.js'] // Path to the API docs
+};
+
+export const swaggerSpec = swaggerJSDoc(options);
+
+// swagger documentation router
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+```
+
 ## Result
+
+models.js
 
 ```js
 /**

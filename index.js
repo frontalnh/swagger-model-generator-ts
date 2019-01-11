@@ -1,7 +1,7 @@
 /**
  * @param {any[]} models
  * @param {Object} option
- * @param {('sequelize'|'mongoose')} option.dbType - which ORM you use
+ * @param {('sequelize'|'mongoose'|'joi')} option.type - which ORM you use
  * @param {string} option.path - where to write model definitions
  */
 function generate(models, option) {
@@ -13,13 +13,61 @@ function generate(models, option) {
   mkdirp(dir);
   fs.writeFileSync(option.path, '');
 
-  switch (option.dbType) {
+  switch (option.type) {
     case 'sequelize': {
       genFromSequelize(models, option);
     }
     case 'mongoose': {
     }
+    case 'joi': {
+      genFromJoi(models, option);
+    }
   }
+}
+
+function genFromJoi(models, option) {
+  let fs = require('fs');
+  let content = `
+/**
+ * @swagger
+ * definitions:
+`;
+
+  for (let model of models) {
+    let modelName = model.tags[0];
+    content += '\n *   ' + modelName + ':\n' + ' *     type: object';
+    content += '\n *     properties:';
+    for (let attr in model.children) {
+      let type = model.children[attr].type;
+      switch (type) {
+        case 'number': {
+          content += '\n *       ' + attr + ':';
+          content += '\n *         type: ' + 'integer' + '';
+          break;
+        }
+        case 'string': {
+          let values = model.children[attr].valids;
+
+          content += '\n *       ' + attr + ':';
+          content += '\n *         type: string';
+          if (model.children[attr].valids) {
+            content += '\n *         enum:';
+
+            for (let value of values) {
+              content += '\n *           - ' + value;
+            }
+          }
+          break;
+        }
+        default: {
+        }
+      }
+    }
+  }
+
+  content += `\n*/`;
+
+  fs.writeFileSync(option.path, content);
 }
 
 function genFromSequelize(models, option) {
