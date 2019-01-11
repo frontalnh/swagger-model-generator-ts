@@ -1,0 +1,21 @@
+{
+  "name": "swagger-model-generator-ts",
+  "version": "0.1.1",
+  "description": "Generate swagger model definition from orm model",
+  "main": "index.js",
+  "repository": "frontalnh/swagger-model-generator-ts",
+  "license": "MIT",
+  "keywords": [
+    "swagger",
+    "node swagger",
+    "node swagger autogen",
+    "swagger generator",
+    "swagger auto generator",
+    "nodejs swagger auto generator",
+    "node swagger generator"
+  ],
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "mkdirp": "^0.5.1"
+  }
+}
