@@ -42,3 +42,30 @@ export const swaggerSpec = swaggerJSDoc(options);
 // swagger documentation router
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 ```
+
+## Result
+
+```js
+/**
+ * @swagger
+ * definitions:
+ *   Sample1:
+ *     type: object
+ *     required:
+ *       - id
+ *     properties:
+ *       id:
+ *         type: string
+ *         enum:
+ *           - Property
+ *   Sample2:
+ *     type: object
+ *     required:
+ *       - id
+ *     properties:
+ *       id:
+ *         type: string
+ *         enum:
+ *           - Property
+ */
+```

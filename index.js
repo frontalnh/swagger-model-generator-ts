@@ -28,15 +28,6 @@ function genFromSequelize(models, option) {
 /**
  * @swagger
  * definitions:
- *   Sample:
- *     type: object
- *     required:
- *       - id
- *     properties:
- *       id:
- *         type: string
- *         enum:
- *           - DDD
 `;
 
   for (let model of models) {
