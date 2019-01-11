@@ -4,6 +4,8 @@ Generate swagger model definition from orm model
 
 This module reads model schema which is created from orm model and generate swagger model definition document
 
+## CURRENT VERSION ONLY SUPPORTS SEQUELIZE ORM
+
 ## Install
 
 `npm install swagger-model-generator-ts`

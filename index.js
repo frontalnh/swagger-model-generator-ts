@@ -64,8 +64,7 @@ function genFromSequelize(models, option) {
         }
         case 'ENUM': {
           let values = model.attributes[attr].type.values;
-          console.log('what2', model.attributes[attr]);
-          console.log('what!!', values);
+
           content += '\n *       ' + attr + ':';
           content += '\n *         type: string';
           content += '\n *         enum:';
