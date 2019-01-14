@@ -53,8 +53,22 @@ import * as swaggerGenerator from 'swagger-model-generator-ts';
 /**
  * In this example Sample is Joi Schema
  */
+let Sample = Joi.object()
+  .tags('Sample')
+  .keys({
+    sample: Joi.string().required()
+  });
 
 swaggerGenerator.generate([Sample], {
+  path: 'path/to/schemas.js',
+  type: 'joi'
+});
+
+or;
+
+// You can pass the directory path of joi schemas
+// You Joi Schema must not export default
+swaggerGenerator.generate('path/to/joi/schemas/directory', {
   path: 'path/to/schemas.js',
   type: 'joi'
 });

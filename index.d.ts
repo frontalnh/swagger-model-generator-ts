@@ -1,4 +1,9 @@
+interface SwaggerGenerateOption {
+  type: string;
+  path: string;
+}
+
 export function generate(
-  models: any[],
-  option: { dbType: string; path: string }
+  models: any[] | string,
+  option: SwaggerGenerateOption
 ): any;
