@@ -3,7 +3,4 @@ interface SwaggerGenerateOption {
   path: string;
 }
 
-export function generate(
-  models: any[] | string,
-  option: SwaggerGenerateOption
-): any;
+export function generate(models: any[], option: SwaggerGenerateOption): any;

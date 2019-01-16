@@ -77,62 +77,6 @@ function genFromJoiSchemas(schemas, option) {
   fs.writeFileSync(option.path, content);
 }
 
-function genFromJoiSchemaDir(dir, option) {
-  console.log('####', dir);
-  let fs = require('fs');
-  let content = `
-/**
- * @swagger
- * definitions:`;
-
-  let files = fs.readdirSync(dir);
-  for (let file of files) {
-    let fileObj = require(dir + '/' + file);
-
-    for (let key in fileObj) {
-      if (typeof fileObj[key] === 'object') {
-        let model = fileObj[key];
-        model = model.describe();
-        let modelName = file.split('.')[0];
-        content += '\n *   ' + modelName + ':\n' + ' *     type: object';
-        content += '\n *     properties:';
-
-        console.log('!@#!@#', model.children);
-        for (let attr in model.children) {
-          let type = model.children[attr].type;
-          switch (type) {
-            case 'number': {
-              content += '\n *       ' + attr + ':';
-              content += '\n *         type: ' + 'integer' + '';
-              break;
-            }
-            case 'string': {
-              let values = model.children[attr].valids;
-
-              content += '\n *       ' + attr + ':';
-              content += '\n *         type: string';
-              if (model.children[attr].valids) {
-                content += '\n *         enum:';
-
-                for (let value of values) {
-                  content += '\n *           - ' + value;
-                }
-              }
-              break;
-            }
-            default: {
-            }
-          }
-        }
-      }
-    }
-  }
-
-  content += `\n*/`;
-
-  fs.writeFileSync(option.path, content);
-}
-
 function genFromSequelize(models, option) {
   let fs = require('fs');
   let content = `
@@ -174,6 +118,21 @@ function genFromSequelize(models, option) {
           for (let value of values) {
             content += '\n *           - ' + value;
           }
+          break;
+        }
+        case 'JSONTYPE': {
+          content += '\n *       ' + attr + ':';
+          content += '\n *         type: object';
+          break;
+        }
+        case 'BOOLEAN': {
+          content += '\n *       ' + attr + ':';
+          content += '\n *         type: boolean';
+          break;
+        }
+        case 'DATE': {
+          content += '\n *       ' + attr + ':';
+          content += '\n *         type: string';
           break;
         }
         default: {

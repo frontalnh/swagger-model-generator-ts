@@ -45,6 +45,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 ## Generate from Joi
 
+### Generate from models
+
 Generate swagger model definitions with Joi Schema
 
 ```js
@@ -63,12 +65,29 @@ swaggerGenerator.generate([Sample], {
   path: 'path/to/schemas.js',
   type: 'joi'
 });
+```
 
-or;
+### Generate from directory
 
-// You can pass the directory path of joi schemas
-// You Joi Schema must not export default
-swaggerGenerator.generate('path/to/joi/schemas/directory', {
+You can generate swagger model definitions from Joi schema directories
+
+```js
+let files = fs.readdirSync('absolute/path/to/joi/schemas');
+let schemas = [];
+for (let file of files) {
+  let fileObj = require('relative/path/to/joi/schemas' + file);
+
+  for (let key in fileObj) {
+    if (typeof fileObj[key] === 'object') {
+      let model = fileObj[key];
+      model = model.tags(file.split('.')[0]);
+
+      schemas.push(model);
+    }
+  }
+}
+
+swaggerGenerator.generate(schemas, {
   path: 'path/to/schemas.js',
   type: 'joi'
 });
