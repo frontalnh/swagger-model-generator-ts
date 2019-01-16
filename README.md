@@ -108,6 +108,40 @@ export const swaggerSpec = swaggerJSDoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 ```
 
+## Extend model definitions
+
+You can extend your model definition generated from generator by swagger `allOf` keyword
+
+extended.js
+
+```js
+/**
+ * @swagger
+ * definitions:
+ *   ExtendedUser:
+ *     allOf:
+ *       - $ref: '#/definitions/User'
+ *       - type: object
+ *       - properties:
+ *           examples:
+ *             type: array
+ *             items:
+ *               $ref: '#/definitions/Example'
+ */
+```
+
+add extended.js to the swagger configuration
+
+```js
+{
+  swaggerDefinition: {
+  },
+  apis: [
+    './src/server/infra/swagger/extended.js'
+  ] // Path to the API docs
+}
+```
+
 ## Result
 
 models.js
