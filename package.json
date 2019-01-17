@@ -1,6 +1,6 @@
 {
   "name": "swagger-model-generator-ts",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Generate swagger model definition from orm model",
   "main": "index.js",
   "repository": "frontalnh/swagger-model-generator-ts",

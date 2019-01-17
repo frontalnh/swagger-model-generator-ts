@@ -58,8 +58,8 @@ import * as swaggerGenerator from 'swagger-model-generator-ts';
 let Sample = Joi.object()
   .tags('Sample')
   .keys({
-    sample: Joi.string().required()
-  });
+    sample: Joi.string().required().description('sample datas')
+  }));
 
 swaggerGenerator.generate([Sample], {
   path: 'path/to/schemas.js',
@@ -157,6 +157,7 @@ models.js
  *     properties:
  *       id:
  *         type: string
+ *         description: sample data!
  *         enum:
  *           - Property
  *   Sample2:

@@ -46,10 +46,15 @@ function genFromJoiSchemas(schemas, option) {
     content += '\n *     properties:';
     for (let attr in model.children) {
       let type = model.children[attr].type;
+      let description = '';
+      if (model.children[attr].description)
+        description = model.children[attr].description;
+
       switch (type) {
         case 'number': {
           content += '\n *       ' + attr + ':';
           content += '\n *         type: ' + 'integer' + '';
+          content += '\n *         description: ' + description + '';
           break;
         }
         case 'string': {
@@ -57,6 +62,7 @@ function genFromJoiSchemas(schemas, option) {
 
           content += '\n *       ' + attr + ':';
           content += '\n *         type: string';
+          content += '\n *         description: ' + description + '';
           if (model.children[attr].valids) {
             content += '\n *         enum:';
 
