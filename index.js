@@ -4,7 +4,7 @@
  * @param {('sequelize'|'mongoose'|'joi')} option.type - which ORM you use
  * @param {string} option.path - where to write model definitions
  */
-function generate(target, option) {
+async function generate(target, option) {
   const fs = require('fs');
   const mkdirp = require('mkdirp');
   let parts = option.path.split('/');
@@ -15,7 +15,7 @@ function generate(target, option) {
 
   switch (option.type) {
     case 'sequelize': {
-      genFromSequelize(target, option);
+      await genFromSequelize(target, option);
       break;
     }
     case 'mongoose': {
@@ -47,8 +47,7 @@ function genFromJoiSchemas(schemas, option) {
     for (let attr in model.children) {
       let type = model.children[attr].type;
       let description = '';
-      if (model.children[attr].description)
-        description = model.children[attr].description;
+      if (model.children[attr].description) description = model.children[attr].description;
 
       switch (type) {
         case 'number': {
@@ -72,6 +71,13 @@ function genFromJoiSchemas(schemas, option) {
           }
           break;
         }
+        case 'array': {
+          content += '\n *       ' + attr + ':';
+          content += '\n *         type: array';
+          content += '\n *         description: ' + description + '';
+          content += '\n *         items: ' + description + '';
+          content += '\n *           type: ' + model.children[attr].items[0].type + '';
+        }
         default: {
         }
       }
@@ -83,16 +89,16 @@ function genFromJoiSchemas(schemas, option) {
   fs.writeFileSync(option.path, content);
 }
 
-function genFromSequelize(models, option) {
+async function genFromSequelize(seq, option) {
   let fs = require('fs');
   let content = `
 /**
  * @swagger
  * definitions:
 `;
-
-  for (let model of models) {
-    let _modelName = model.prototype.constructor.name;
+  for (let model in seq.models) {
+    // console.log(seq.models[model]);
+    let _modelName = model;
     let modelName = '';
     let _parts = _modelName.split('-');
     for (let part of _parts) {
@@ -101,24 +107,40 @@ function genFromSequelize(models, option) {
     }
     content += '\n *   ' + modelName + ':\n' + ' *     type: object';
     content += '\n *     properties:';
-    for (let attr in model.attributes) {
-      let type = model.attributes[attr].type.constructor.name;
-      switch (type) {
-        case 'STRING': {
+    const attributes = await seq.models[model].describe();
+    console.log(attributes);
+    for (let attr in attributes) {
+      let type = attributes[attr].type;
+      let comment = attributes[attr].comment ? attributes[attr].comment : '';
+      switch (true) {
+        case /VARCHAR/.test(type): {
           content += '\n *       ' + attr + ':';
           content += '\n *         type: ' + 'string' + '';
+          content += '\n *         description: ' + comment + '';
           break;
         }
-        case 'INTEGER': {
+        case /TINYINT/.test(type): {
+          content += '\n *       ' + attr + ':';
+          content += '\n *         type: boolean';
+          content += '\n *         description: ' + comment + '';
+          break;
+        }
+        case /INT/.test(type): {
           content += '\n *       ' + attr + ':';
           content += '\n *         type: ' + 'integer' + '';
+          content += '\n *         description: ' + comment + '';
           break;
         }
-        case 'ENUM': {
-          let values = model.attributes[attr].type.values;
+        case /ENUM/.test(type): {
+          const values = type
+            .split('ENUM')[1]
+            .slice(1, -1)
+            .split(',');
 
+          console.log(values);
           content += '\n *       ' + attr + ':';
           content += '\n *         type: string';
+          content += '\n *         description: ' + comment + '';
           content += '\n *         enum:';
 
           for (let value of values) {
@@ -126,19 +148,16 @@ function genFromSequelize(models, option) {
           }
           break;
         }
-        case 'JSONTYPE': {
+        case /JSONTYPE/.test(type): {
           content += '\n *       ' + attr + ':';
           content += '\n *         type: object';
+          content += '\n *         description: ' + comment + '';
           break;
         }
-        case 'BOOLEAN': {
-          content += '\n *       ' + attr + ':';
-          content += '\n *         type: boolean';
-          break;
-        }
-        case 'DATE': {
+        case /DATETIME/.test(type): {
           content += '\n *       ' + attr + ':';
           content += '\n *         type: string';
+          content += '\n *         description: ' + comment + '';
           break;
         }
         default: {

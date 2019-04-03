@@ -22,7 +22,7 @@ import * as swaggerGenerator from 'swagger-model-generator-ts';
  * In this example we will use model name Sample with sequelize orm
  */
 
-swaggerGenerator.generate([Sample], {
+swaggerGenerator.generate('Initialized Sequelize Object', {
   path: 'path/to/models.js',
   type: 'sequelize'
 });
@@ -137,7 +137,7 @@ add extended.js to the swagger configuration
   swaggerDefinition: {
   },
   apis: [
-    './src/server/infra/swagger/extended.js'
+    './src/infra/swagger/extended.js'
   ] // Path to the API docs
 }
 ```

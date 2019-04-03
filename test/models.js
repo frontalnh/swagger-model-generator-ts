@@ -2,9 +2,11 @@
 /**
  * @swagger
  * definitions:
- *   CreateUserSchema:
+ *   RegisterSchema:
  *     type: object
  *     properties:
- *       name:
+ *       email:
  *         type: string
+ *         required: true
+ *         description: 
 */

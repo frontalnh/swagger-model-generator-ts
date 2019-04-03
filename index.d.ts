@@ -3,4 +3,4 @@ interface SwaggerGenerateOption {
   path: string;
 }
 
-export function generate(models: any[], option: SwaggerGenerateOption): any;
+export function generate(models: any[] | Sequelize, option: SwaggerGenerateOption): any;
