@@ -7,6 +7,7 @@
  *     properties:
  *       email:
  *         type: string
- *         required: true
  *         description: 
+ *     required:
+ *       - email
 */

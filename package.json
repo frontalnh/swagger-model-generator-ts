@@ -1,6 +1,6 @@
 {
   "name": "swagger-model-generator-ts",
-  "version": "0.2.8",
+  "version": "0.3.6",
   "description": "Generate swagger model definition from orm model",
   "main": "index.js",
   "repository": "frontalnh/swagger-model-generator-ts",
@@ -17,6 +17,7 @@
   "dependencies": {
     "fs": "0.0.1-security",
     "joi": "^14.3.1",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "sequelize-typescript": "^0.6.9"
   }
 }

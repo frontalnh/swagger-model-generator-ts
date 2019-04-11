@@ -44,10 +44,14 @@ function genFromJoiSchemas(schemas, option) {
     let modelName = model.tags[0];
     content += '\n *   ' + modelName + ':\n' + ' *     type: object';
     content += '\n *     properties:';
+    const requiredList = [];
     for (let attr in model.children) {
       let type = model.children[attr].type;
       let description = '';
       if (model.children[attr].description) description = model.children[attr].description;
+      const flags = model.children[attr].flags;
+      const required = flags && flags.presence === 'required' ? true : false;
+      if (required) requiredList.push(attr);
 
       switch (type) {
         case 'number': {
@@ -82,6 +86,10 @@ function genFromJoiSchemas(schemas, option) {
         }
       }
     }
+    content += '\n *     required:';
+    for (let req of requiredList) {
+      content += `\n *       - ${req}`;
+    }
   }
 
   content += `\n*/`;
@@ -100,7 +108,9 @@ async function genFromSequelize(seq, option) {
     // console.log(seq.models[model]);
     let _modelName = model;
     let modelName = '';
-    let _parts = _modelName.split('-');
+    let _parts =
+      _modelName.split('-').length >= _modelName.split('_').length ? _modelName.split('-') : _modelName.split('_');
+
     for (let part of _parts) {
       modelName += part[0].toUpperCase();
       modelName += part.slice(1, part.length);
@@ -108,7 +118,7 @@ async function genFromSequelize(seq, option) {
     content += '\n *   ' + modelName + ':\n' + ' *     type: object';
     content += '\n *     properties:';
     const attributes = await seq.models[model].describe();
-    console.log(attributes);
+
     for (let attr in attributes) {
       let type = attributes[attr].type;
       let comment = attributes[attr].comment ? attributes[attr].comment : '';
@@ -137,7 +147,6 @@ async function genFromSequelize(seq, option) {
             .slice(1, -1)
             .split(',');
 
-          console.log(values);
           content += '\n *       ' + attr + ':';
           content += '\n *         type: string';
           content += '\n *         description: ' + comment + '';
