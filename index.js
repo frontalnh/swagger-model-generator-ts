@@ -163,6 +163,12 @@ async function genFromSequelize(seq, option) {
           content += '\n *         description: ' + comment + '';
           break;
         }
+        case /TEXT/.test(type): {
+          content += '\n *       ' + attr + ':';
+          content += '\n *         type: string';
+          content += '\n *         description: ' + comment + '';
+          break;
+        }
         case /DATETIME/.test(type): {
           content += '\n *       ' + attr + ':';
           content += '\n *         type: string';
