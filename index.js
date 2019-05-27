@@ -60,6 +60,12 @@ function genFromJoiSchemas(schemas, option) {
           content += '\n *         description: ' + description + '';
           break;
         }
+        case 'boolean': {
+          content += '\n *       ' + attr + ':';
+          content += '\n *         type: ' + 'boolean' + '';
+          content += '\n *         description: ' + description + '';
+          break;
+        }  
         case 'string': {
           let values = model.children[attr].valids;
 
